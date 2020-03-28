@@ -9,7 +9,8 @@ async def send_out_results(url, email):
     await asyncio.sleep(10)
     VideoIntelligence.transcribe_video(url)
     Summary = VideoIntelligence.generate_summary()
-    SendResults.formulate_message(Summary, email, url)
+    
+    print(SendResults.formulate_message(email, Summary, url))
 
 async def store_url_and_process_algorithm(request):
     try:

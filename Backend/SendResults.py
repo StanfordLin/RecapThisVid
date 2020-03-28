@@ -1,8 +1,9 @@
 # we will be sending out the results through this file
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import Credentials
 
-SendGridAPIKey = "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"
+SendGridAPIKey = Credentials.SendGridAPIKey
 error_count = 0
 
 def formulate_message(email, message, url):
@@ -11,7 +12,7 @@ def formulate_message(email, message, url):
         to_emails=email,
         subject=('A summary of the following video: '+str(url)),
         html_content='<strong>'+message+'</strong>')
-    send_email(email)
+    return send_email(email)
 
 def send_email(email):
     global error_count

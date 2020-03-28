@@ -1,5 +1,3 @@
-VideoUrl  = ""
-
 def transcribe_video(url): 
     print("Transcribing.")
 
