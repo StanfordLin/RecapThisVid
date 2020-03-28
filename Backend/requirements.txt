@@ -1,2 +1,4 @@
 asyncio
 aiohttp
+google-cloud-videointelligence
+SendGrid
