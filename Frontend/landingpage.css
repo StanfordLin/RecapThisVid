@@ -56,8 +56,7 @@ header
 	justify-content: center;
 	align-self: center;
 	align-items: center;
-	margin-top: 175px;
-	padding-bottom: 30px;
+	margin-top: 125px;
 }
 
 .button_med
@@ -84,7 +83,7 @@ header
 
 .explanation
 {
-	padding-top: 60px;
+	padding-top: 50px;
 }
 
 .sample_form
