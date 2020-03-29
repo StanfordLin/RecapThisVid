@@ -76,7 +76,6 @@ def build_similarity_matrix(sentences):
 def generate_summary():
     # generate the sentences from the existing paragraph
     sentences = split_text_into_sentences()
-    print(sentences)
 
     # generate a similarity matrix
     similarity_matrix = build_similarity_matrix(sentences)
@@ -87,15 +86,15 @@ def generate_summary():
 
     # organize the scores from top to bottom
     ranked_sentence = sorted(((scores[i],s) for i,s in enumerate(sentences)), reverse=True)    
-    print("Indexes of top ranked_sentence order are ", ranked_sentence)     
+    #print("Indexes of top ranked_sentence order are ", ranked_sentence)     
 
     summarize_text = []
 
-    for i in range(2):
+    for i in range(5):
       summarize_text.append(" ".join(ranked_sentence[i][1]))
-    
+
     # Step 5 - Offcourse, output the summarize text
-    print("Summarize Text: \n", ". ".join(summarize_text))
+    print("Summarize Text: \n", ". ".join(summarize_text)+".")
 
 if __name__ == "__main__":
     #url = ""
