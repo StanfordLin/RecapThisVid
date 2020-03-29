@@ -5,17 +5,22 @@ from nltk.cluster.util import cosine_distance
 import numpy as np
 import networkx as nx
 from datetime import datetime
+from google.cloud import videointelligence
+from pytube import YouTube
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
 paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
 
-print("\nParagraph: \n" + paragraph + "\n")
-
 # user journey -> submit url -> download video from url -> transcribe video -> use text rank to build summary
 
+def download_and_save_video(url):
+    YouTube(url).streams.get_highest_resolution().download(filename='Analyze')
+
 def transcribe_video(url):
+    download_and_save_video(url)
+
     startTime = datetime.now()
     """Transcribe speech from a video stored on GCS."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
@@ -69,9 +74,9 @@ def transcribe_video(url):
     print(wallOfText)
     # print(f"""Execution Time: {datetime.now() - startTime}""")
 
-'''
-paragraph = f.read()
-'''
+
+#paragraph = f.read()
+print(paragraph)
 
 def split_text_into_sentences():
     sentences = paragraph.split(". ")
@@ -152,6 +157,7 @@ def generate_summary():
 
 if __name__ == "__main__":
     url = ""
-    transcribe_video(url)
+    download_and_save_video('https://youtu.be/9bZkp7q19f0')
+    #transcribe_video(url)
     # generate_summary()
     # print("Paragraph summarized: " + paragraph)
