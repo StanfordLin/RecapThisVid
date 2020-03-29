@@ -1,0 +1,56 @@
+
+Paragraph: 
+In an attempt to build an AI-ready workforce, Microsoft announced Intelligent Cloud Hub which has been launched to empower the next generation of students with AI-ready skills. Envisioned as a three-year collaborative program, Intelligent Cloud Hub will support around 100 institutions with AI infrastructure, course content and curriculum, developer support, development tools and give students access to cloud and AI services. As part of the program, the Redmond giant which wants to expand its reach and is planning to build a strong developer ecosystem in India with the program will set up the core AI infrastructure and IoT Hub for the selected campuses. The company will provide AI development tools and Azure AI services such as Microsoft Cognitive Services, Bot Services and Azure Machine Learning.According to Manish Prakash, Country General Manager-PS, Health and Education, Microsoft India, said, With AI being the defining technology of our time, it is transforming lives and industry and the jobs of tomorrow will require a different skillset. This will require more collaborations and training and working with AI. That’s why it has become more critical than ever for educational institutions to integrate new cloud and AI technologies. The program is an attempt to ramp up the institutional set-up and build capabilities among the educators to educate the workforce of tomorrow. The program aims to build up the cognitive skills and in-depth understanding of developing intelligent cloud connected solutions for applications across industry. Earlier in April this year, the company announced Microsoft Professional Program In AI as a learning track open to the public. The program was developed to provide job ready skills to programmers who wanted to hone their skills in AI and data science with a series of online courses which featured hands-on labs and expert instructors as well. This program also included developer-focused AI school that provided a bunch of assets to help build AI skills. 
+
+
+Processing video for speech transcription.
+Alternative level information:
+Transcript: So I can talk to her from a public health perspective because this is something I spent a lot of time on in the last 30 years of my career. You know what I have what I call the j-shaped curve of neglect something bad.
+Confidence: 0.8774545192718506
+
+Word level information:
+	0.2s - 0.5s: So
+	0.5s - 0.5s: I
+	0.5s - 0.7000000000000001s: can
+	0.7000000000000001s - 1.0s: talk
+	1.0s - 1.1s: to
+	1.1s - 1.2s: her
+	1.2s - 1.4s: from
+	1.4s - 1.5s: a
+	1.5s - 1.8s: public
+	1.8s - 2.1s: health
+	2.1s - 2.7s: perspective
+	2.7s - 3.0s: because
+	3.0s - 3.3s: this
+	3.3s - 3.4s: is
+	3.4s - 3.8s: something
+	3.8s - 3.9s: I
+	3.9s - 4.2s: spent
+	4.2s - 4.2s: a
+	4.2s - 4.5s: lot
+	4.5s - 4.6s: of
+	4.6s - 4.9s: time
+	4.9s - 5.2s: on
+	5.2s - 5.4s: in
+	5.4s - 5.4s: the
+	5.4s - 6.0s: last
+	6.7s - 7.0s: 30
+	7.0s - 7.2s: years
+	7.2s - 7.3s: of
+	7.3s - 7.5s: my
+	7.5s - 7.9s: career.
+	9.3s - 9.5s: You
+	9.5s - 9.6s: know
+	9.6s - 10.0s: what
+	10.7s - 10.8s: I
+	10.8s - 11.0s: have
+	11.0s - 11.2s: what
+	11.2s - 11.2s: I
+	11.2s - 11.4s: call
+	11.4s - 11.9s: the
+	11.9s - 12.6s: j-shaped
+	12.6s - 13.0s: curve
+	13.0s - 13.2s: of
+	13.2s - 13.9s: neglect
+	14.2s - 14.6s: something
+	14.6s - 14.9s: bad.

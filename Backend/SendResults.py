@@ -11,7 +11,7 @@ def formulate_message(email, message, url):
         from_email='nihalpot@gmail.com',
         to_emails=email,
         subject=('A summary of the following video: '+str(url)),
-        html_content='<strong>'+message+'</strong>')
+        html_content='<strong>'+message+'</strong>') 
     return send_email(email)
 
 def send_email(email):
