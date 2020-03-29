@@ -2,7 +2,7 @@
 :root
 {
 	--light_text: #FFFBFB;
-	--dark_text: #000000;
+	--dark_text: #3E3E3E;
 	--line: #FFFAFA;
 	--input_background: rgba(229,229,229,0.6);
 	--button_background_hover: rgba(229,229,229,0.45);
@@ -42,35 +42,23 @@ main
 {
 	height: 100%;
 	display: grid;
-	grid-template-columns: minmax(60px, 1fr) repeat(6, minmax(50px, 190px) minmax(60px, 1fr);
+	grid-template-rows: minmax(60px, 1fr) repeat(6, minmax(50px, 190px)) minmax(60px, 1fr);
 }
 
 header
 {
-	font-family:"Lato", sans-serif;
-	font-size: 4rem;
+	font-family: "Lato", sans-serif;
+	font-size: 3.0rem;
+	font-weight: 300;
 	color: var(--light_text);
 	text-decoration: none;
-	grid-column: 3 / span 2;
+	display: flex;
+	justify-content: center;
+	align-self: center;
+	align-items: center;
+	margin-top: 175px;
+	
 }
-
-button
-{
-	cursor: pointer;
-}
-
-.links button
-{
-	font-size: 2rem;
-	font-weight: 400;
-	transition: var(--transition);
-}
-
-.links button:hover
-{
-	color: var(--button_text_hover);
-}
-
 
 .button_med
 {
@@ -87,8 +75,41 @@ button
 
 .info
 {
-	grid-column: 2 / span 4;
+	align-self: center;
+	text-align: center;
+	margin-top: 275px;
+	margin-left: 300px;
+	margin-right: 300px;
+}
+
+.sample_form
+{
+	align-self: center;
 	align-items: center;
+	text-align: center;
+	background: var(--input_background);
+	margin-left: 400px;
+	margin-right: 400px;
+	margin-top: 615px;	
+}
+
+.sample_form button
+{
+	font-family: "Lato", sans-serif;
+	font-size: 2rem;
+	font-weight: 400;
+	transition: var(--transition);
+	padding: 20px;
+}
+
+.sample_form button:hover
+{
+	color: var(--button_text_hover);
+}
+
+button
+{
+	cursor: pointer;
 }
 
 .hero_font
@@ -97,5 +118,13 @@ button
 	font-family: "Lato", sans-serif;
 	font-weight: 100;
 	font-style: italic;
+	font-size: 1.5rem;
+}
+
+.input_font
+{
+	color: var(--dark_text);
+	font-family: "Lato", sans-serif;
+	font-weight: 400;
 	font-size: 1.5rem;
 }
