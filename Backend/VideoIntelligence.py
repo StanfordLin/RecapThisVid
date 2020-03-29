@@ -143,7 +143,7 @@ def transcribe_get_all(url):
 
 def split_text_into_sentences():
     sentences = paragraph.split(". ")
-    print(sentences)
+    #print(sentences)
     return text_preprocessing(sentences)
 
 def text_preprocessing(sentences):

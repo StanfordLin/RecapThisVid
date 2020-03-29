@@ -18,14 +18,17 @@ async def store_url_and_process_algorithm(request):
 
         url = body['url'] # find the url in the request body
 
+        print(url)
         if 'email' in body: # if the user provides an email
             email = body['email']
+            print(email)
             asyncio.ensure_future(send_out_results(url, email)) # do it after the current method
             return web.Response(status=200, text="The results will be emailed to you.")
 
         # doesn't provide email, do it synchronously
         #VideoIntelligence.transcribe_video(url)
         Summary = VideoIntelligence.transcribe_video(url)
+        print("Done.")
 
         return web.Response(status=200, text=Summary)
     except Exception as e:
