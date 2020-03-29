@@ -4,6 +4,7 @@ from nltk.corpus import stopwords
 from nltk.cluster.util import cosine_distance
 import numpy as np
 import networkx as nx
+from datetime import datetime
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
@@ -14,9 +15,59 @@ print("\nParagraph: \n" + paragraph + "\n")
 
 # user journey -> submit url -> download video from url -> transcribe video -> use text rank to build summary
 
-def transcribe_video(url): 
-    print("")
-    print("Transcribing.")
+def transcribe_video(url):
+    startTime = datetime.now()
+    """Transcribe speech from a video stored on GCS."""
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.SPEECH_TRANSCRIPTION]
+
+    config = videointelligence.types.SpeechTranscriptionConfig(
+        language_code="en-US", enable_automatic_punctuation=True
+    )
+    video_context = videointelligence.types.VideoContext(
+        speech_transcription_config=config
+    )
+
+    operation = video_client.annotate_video(
+        "gs://videos12491/health_officials.mp4", features=features, video_context=video_context
+    )
+
+    print("\nProcessing video for speech transcription.")
+
+    result = operation.result(timeout=600)
+
+    # There is only one annotation_result since only
+    # one video is processed.
+    annotation_results = result.annotation_results[0]
+    wallOfText = ""
+    for speech_transcription in annotation_results.speech_transcriptions:
+        # print(speech_transcription)
+
+        # The number of alternatives for each transcription is limited by
+        # SpeechTranscriptionConfig.max_alternatives.
+        # Each alternative is a different possible transcription
+        # and has its own confidence score.
+        for alternative in speech_transcription.alternatives:
+            wallOfText += alternative.transcript
+            # print("Alternative level information:")
+
+            # print("Transcript: {}".format(alternative.transcript))
+            # print("Confidence: {}\n".format(alternative.confidence))
+
+            # print("Word level information:")
+            # for word_info in alternative.words:
+            #     word = word_info.word
+            #     start_time = word_info.start_time
+            #     end_time = word_info.end_time
+            #     print(
+            #         "\t{}s - {}s: {}".format(
+            #             start_time.seconds + start_time.nanos * 1e-9,
+            #             end_time.seconds + end_time.nanos * 1e-9,
+            #             word,
+            #         )
+            #     )
+    print(wallOfText)
+    # print(f"""Execution Time: {datetime.now() - startTime}""")
 
 '''
 paragraph = f.read()
@@ -100,6 +151,7 @@ def generate_summary():
     return summary
 
 if __name__ == "__main__":
-    #url = ""
-    #transcribe_video(url)
-    generate_summary()
+    url = ""
+    transcribe_video(url)
+    # generate_summary()
+    # print("Paragraph summarized: " + paragraph)
