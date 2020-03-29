@@ -57,7 +57,7 @@ header
 	align-self: center;
 	align-items: center;
 	margin-top: 175px;
-	
+	padding-bottom: 30px;
 }
 
 .button_med
@@ -80,6 +80,11 @@ header
 	margin-top: 275px;
 	margin-left: 300px;
 	margin-right: 300px;
+}
+
+.explanation
+{
+	padding-top: 60px;
 }
 
 .sample_form
