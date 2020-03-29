@@ -1,6 +1,5 @@
 asyncio
 aiohttp
-google-cloud-videointelligence
 SendGrid
 nltk
 numpy
