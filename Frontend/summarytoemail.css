@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,300i&display=swap');
+:root
+{
+	--light_text: #FFFBFB;
+	--dark_text: #3E3E3E;
+	--line: #FFFAFA;
+	--input_background: rgba(229,229,229,0.6);
+	--button_background_hover: rgba(229,229,229,0.45);
+	--input_box: #FFFBFB;
+	--button_text_hover: rgba(0,0,0,0.85);
+	--transition: all 0.3s ease 0s;
+	--overlay: rgba(51,51,51,0.7);
+}
+
+*
+{
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html, body
+{
+	height: 100%;
+	overflow: auto;
+}
+
+body
+{
+	background:
+		linear-gradient(
+			var(--overlay),
+			var(--overlay)
+		),
+		url(./assets/Background.jpg);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+}
+
+main
+{
+	height: 100%;
+	display: grid;
+	grid-template-rows: minmax(60px, 1fr) repeat(6, minmax(50px, 190px)) minmax(60px, 1fr);
+}
+
+.summary_complete
+{
+	font-family: "Lato", sans-serif;
+	font-size: 4.5rem;
+	font-weight: 200;
+	font-style: italic;
+	color: var(--light_text);
+	align-self: center;
+	text-align: center;
+	margin-top: 250px;
+}
+
+.recipient_email
+{
+	font-family: "Lato", sans-serif;
+	font-size: 2.5rem;
+	font-weight: 200;
+	font-style: italic;
+	color: var(--light_text);
+	align-self: center;
+	text-align: center;
+	margin-top: 600px;
+}
+
+.email_box
+{
+	margin-top: 20px;
+}
+
+.button_to_home
+{
+	align-self: center;
+	align-items: center;
+	text-align: center;
+	margin-left: 100px;
+	margin-right: 100px;
+	margin-top: 950px;
+}
+
+.button_to_home button
+{
+	font-family: "Lato", sans-serif;
+	font-size: 2rem;
+	font-weight: 400;
+	transition: var(--transition);
+	padding: 20px;
+}
+
+.button_to_home button:hover
+{
+	color: var(--button_text_hover);
+}
+
+button
+{
+	cursor: pointer;
+}
+
+.return_home
+{
+	border: none;
+	background-color: var(--input_background);
+	padding: 8px 25px;
+	transition: var(--transition);
+}
+
+.return_home:hover
+{
+	background-color: var(--button_background_hover);
+}
