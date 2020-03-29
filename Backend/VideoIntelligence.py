@@ -7,16 +7,24 @@ import networkx as nx
 from datetime import datetime
 from google.cloud import videointelligence
 from pytube import YouTube
+from google.cloud import storage
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
-paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
+# paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
 
 # user journey -> submit url -> download video from url -> transcribe video -> use text rank to build summary
 
 def download_and_save_video(url):
-    YouTube(url).streams.get_highest_resolution().download(filename='Analyze')
+    storageCli = storage.Client()
+    # get bucket
+    bucket = storageCli.get_bucket('videos12491') #without gs://
+    blob = bucket.blob('Analyze.mp4')
+    # TODO: Fix this error of AttributeError: 'str' object has no attribute 'tell', needs to save in /tmp file in google cloud function
+    videoFile = YouTube(url).streams.get_highest_resolution().download(filename='Analyze.mp4', output_path="/tmp")
+    blob.upload_from_file(videoFile)
+  
 
 def transcribe_video(url):
     download_and_save_video(url)
@@ -34,12 +42,12 @@ def transcribe_video(url):
     )
 
     operation = video_client.annotate_video(
-        "gs://videos12491/health_officials.mp4", features=features, video_context=video_context
+        "gs://videos12491/Analyze.mp4", features=features, video_context=video_context
     )
 
     print("\nProcessing video for speech transcription.")
 
-    result = operation.result(timeout=600)
+    result = operation.result(timeout=3000)
 
     # There is only one annotation_result since only
     # one video is processed.
@@ -72,6 +80,9 @@ def transcribe_video(url):
             #         )
             #     )
     print(wallOfText)
+    paragraph = wallOfText
+    return generate_summary()
+
     # print(f"""Execution Time: {datetime.now() - startTime}""")
 
 
@@ -97,7 +108,7 @@ def transcribe_get_all(url):
 
     print("\nProcessing video for speech transcription.")
 
-    result = operation.result(timeout=600)
+    result = operation.result(timeout=3000)
 
     # There is only one annotation_result since only
     # one video is processed.
@@ -208,8 +219,8 @@ def generate_summary():
 
 if __name__ == "__main__":
     url = ""
-    transcribe_get_all(url)
-    # download_and_save_video('https://youtu.be/9bZkp7q19f0')
+    # transcribe_get_all(url)
+    download_and_save_video('https://youtu.be/9bZkp7q19f0')
     #transcribe_video(url)
     # generate_summary()
     # print("Paragraph summarized: " + paragraph)

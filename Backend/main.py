@@ -4,6 +4,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import Credentials
 from google.cloud import pubsub_v1
+import VideoIntelligence
 
 SendGridAPIKey = Credentials.SendGridAPIKey
 error_count = 0
@@ -37,7 +38,6 @@ def transcribeYT(request):
     topic_path = publisher.topic_path(project_id, topic_name)
     encodedData = url.encode("utf-8")
     future = publisher.publish(topic_path, data=encodedData)
-    print("Video Intelligence API Initiated")
     print(future.result)
     return 'Hello {}!'.format(escape(url))
 
@@ -61,7 +61,10 @@ def hello_pubsub(event, context):
     else:
         url = 'World'
     print('Hello {}!'.format(url))
-    formulate_message("stanlin1999@gmail.com","THE URL HAHAHA {}".format(url),"SUBJECT Message from Pub Sub")
+    generatedSummary = VideoIntelligence.transcribe_video(url)
+    print("Video Intelligence API Initiated")
+    # TODO: Parameterize the email
+    formulate_message("stanlin1999@gmail.com","The summary for your video {}: {}".format(url,generatedSummary),"Summary of your video")
 
 def formulate_message(email, message, url):
     email = Mail(

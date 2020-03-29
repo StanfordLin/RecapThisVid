@@ -7,3 +7,5 @@ networkx
 google-cloud-storage
 google-cloud-videointelligence
 google-cloud-pubsub
+flask
+pytube3
