@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,300i&display=swap');
+:root
+{
+	--light_text: #FFFBFB;
+	--dark_text: #000000;
+	--line: #FFFAFA;
+	--input_background: rgba(229,229,229,0.6);
+	--button_background_hover: rgba(229,229,229,0.45);
+	--input_box: #FFFBFB;
+	--button_text_hover: rgba(0,0,0,0.85);
+	--transition: all 0.3s ease 0s;
+	--overlay: rgba(51,51,51,0.7);
+}
+
+*
+{
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html, body
+{
+	height: 100%;
+	overflow: auto;
+}
+
+body
+{
+	background:
+		linear-gradient(
+			var(--overlay),
+			var(--overlay)
+		),
+		url(./assets/Background.jpg);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+}
+
+main
+{
+	height: 100%;
+	display: grid;
+	grid-template-columns: minmax(60px, 1fr) repeat(6, minmax(50px, 190px) minmax(60px, 1fr);
+}
+
+header
+{
+	font-family:"Lato", sans-serif;
+	font-size: 4rem;
+	color: var(--light_text);
+	text-decoration: none;
+	grid-column: 3 / span 2;
+}
+
+button
+{
+	cursor: pointer;
+}
+
+.links button
+{
+	font-size: 2rem;
+	font-weight: 400;
+	transition: var(--transition);
+}
+
+.links button:hover
+{
+	color: var(--button_text_hover);
+}
+
+
+.button_med
+{
+	border: none;
+	background-color: var(--input_background);
+	padding: 8px 25px;
+	transition: var(--transition);
+}
+
+.button_med:hover
+{
+	background-color: var(--button_background_hover);
+}
+
+.info
+{
+	grid-column: 2 / span 4;
+	align-items: center;
+}
+
+.hero_font
+{
+	color: var(--light_text);
+	font-family: "Lato", sans-serif;
+	font-weight: 100;
+	font-style: italic;
+	font-size: 1.5rem;
+}
