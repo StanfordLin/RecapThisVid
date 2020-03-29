@@ -6,16 +6,21 @@ import numpy as np
 import networkx as nx
 from datetime import datetime
 from google.cloud import videointelligence
+from pytube import YouTube
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
-paragraph = "In an attempt to build an AI-ready workforce, Microsoft announced Intelligent Cloud Hub which has been launched to empower the next generation of students with AI-ready skills. Envisioned as a three-year collaborative program, Intelligent Cloud Hub will support around 100 institutions with AI infrastructure, course content and curriculum, developer support, development tools and give students access to cloud and AI services. As part of the program, the Redmond giant which wants to expand its reach and is planning to build a strong developer ecosystem in India with the program will set up the core AI infrastructure and IoT Hub for the selected campuses. The company will provide AI development tools and Azure AI services such as Microsoft Cognitive Services, Bot Services and Azure Machine Learning.According to Manish Prakash, Country General Manager-PS, Health and Education, Microsoft India, said, With AI being the defining technology of our time, it is transforming lives and industry and the jobs of tomorrow will require a different skillset. This will require more collaborations and training and working with AI. That’s why it has become more critical than ever for educational institutions to integrate new cloud and AI technologies. The program is an attempt to ramp up the institutional set-up and build capabilities among the educators to educate the workforce of tomorrow. The program aims to build up the cognitive skills and in-depth understanding of developing intelligent cloud connected solutions for applications across industry. Earlier in April this year, the company announced Microsoft Professional Program In AI as a learning track open to the public. The program was developed to provide job ready skills to programmers who wanted to hone their skills in AI and data science with a series of online courses which featured hands-on labs and expert instructors as well. This program also included developer-focused AI school that provided a bunch of assets to help build AI skills. "
-print("\nParagraph: \n" + paragraph + "\n")
+paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
 
 # user journey -> submit url -> download video from url -> transcribe video -> use text rank to build summary
 
+def download_and_save_video(url):
+    YouTube(url).streams.get_highest_resolution().download(filename='Analyze')
+
 def transcribe_video(url):
+    download_and_save_video(url)
+
     startTime = datetime.now()
     """Transcribe speech from a video stored on GCS."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
@@ -69,9 +74,9 @@ def transcribe_video(url):
     print(wallOfText)
     # print(f"""Execution Time: {datetime.now() - startTime}""")
 
-'''
-paragraph = f.read()
-'''
+
+#paragraph = f.read()
+print(paragraph)
 
 def transcribe_get_all(url):
     startTime = datetime.now()
@@ -125,7 +130,7 @@ def transcribe_get_all(url):
     # print(f"""Execution Time: {datetime.now() - startTime}""")
 
 def split_text_into_sentences():
-    sentences = paragraph.split(".")
+    sentences = paragraph.split(". ")
     return text_preprocessing(sentences)
 
 def text_preprocessing(sentences):
@@ -189,11 +194,11 @@ def generate_summary():
 
     # organize the scores from top to bottom
     ranked_sentence = sorted(((scores[i],s) for i,s in enumerate(sentences)), reverse=True)    
-    #print("Indexes of top ranked_sentence order are ", ranked_sentence)     
+   # print("Indexes of top ranked_sentence order are ", ranked_sentence)     
 
     summarize_text = []
 
-    for i in range(5):
+    for i in range(min(5, len(sentences))):
       summarize_text.append(" ".join(ranked_sentence[i][1]))
 
     # Step 5 - Offcourse, output the summarize text
@@ -204,5 +209,7 @@ def generate_summary():
 if __name__ == "__main__":
     url = ""
     transcribe_get_all(url)
+    # download_and_save_video('https://youtu.be/9bZkp7q19f0')
+    #transcribe_video(url)
     # generate_summary()
     # print("Paragraph summarized: " + paragraph)
