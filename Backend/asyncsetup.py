@@ -7,8 +7,8 @@ import SendResults
 async def send_out_results(url, email):
     # send out the results to the user
     await asyncio.sleep(10)
-    VideoIntelligence.transcribe_video(url)
-    Summary = VideoIntelligence.generate_summary()
+    #VideoIntelligence.transcribe_video(url)
+    Summary = VideoIntelligence.transcribe_video(url)
     
     print(SendResults.formulate_message(email, Summary, url))
 
@@ -24,8 +24,8 @@ async def store_url_and_process_algorithm(request):
             return web.Response(status=200, text="The results will be emailed to you.")
 
         # doesn't provide email, do it synchronously
-        VideoIntelligence.transcribe_video(url)
-        Summary = VideoIntelligence.generate_summary()
+        #VideoIntelligence.transcribe_video(url)
+        Summary = VideoIntelligence.transcribe_video(url)
 
         return web.Response(status=200, text=Summary)
     except Exception as e:
