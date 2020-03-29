@@ -6,3 +6,4 @@ numpy
 networkx
 google-cloud-storage
 google-cloud-videointelligence
+google-cloud-pubsub

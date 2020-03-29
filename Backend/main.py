@@ -3,11 +3,14 @@ from google.cloud import videointelligence
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import Credentials
+from google.cloud import pubsub_v1
 
 SendGridAPIKey = Credentials.SendGridAPIKey
 error_count = 0
+project_id = "videoml-lahacks"
+topic_name = "testTopic"
 
-def hello_http(request):
+def transcribeYT(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
@@ -26,6 +29,16 @@ def hello_http(request):
         url = request_args['url']
     else:
         url = 'World'
+    
+      # Pub Sub
+    publisher = pubsub_v1.PublisherClient()
+    # The `topic_path` method creates a fully qualified identifier
+    # in the form `projects/{project_id}/topics/{topic_name}`
+    topic_path = publisher.topic_path(project_id, topic_name)
+    encodedData = url.encode("utf-8")
+    future = publisher.publish(topic_path, data=encodedData)
+    print("Video Intelligence API Initiated")
+    print(future.result)
     return 'Hello {}!'.format(escape(url))
 
 def hello_pubsub(event, context):
@@ -44,11 +57,11 @@ def hello_pubsub(event, context):
     """.format(context.event_id, context.timestamp))
 
     if 'data' in event:
-        name = base64.b64decode(event['data']).decode('utf-8')
+        url = base64.b64decode(event['data']).decode('utf-8')
     else:
-        name = 'World'
-    print('Hello {}!'.format(name))
-    formulate_message("stanlin1999@gmail.com","Test","Message from cloud function: " + event['data'])
+        url = 'World'
+    print('Hello {}!'.format(url))
+    formulate_message("stanlin1999@gmail.com","THE URL HAHAHA {}".format(url),"SUBJECT Message from Pub Sub")
 
 def formulate_message(email, message, url):
     email = Mail(
