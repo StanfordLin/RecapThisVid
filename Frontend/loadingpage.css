@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&display=swap');
+
+:root {
+    --dark60: rgba(48, 70, 89, .6);
+    --light: #f5f9fc;
+}
+
+body {
+    background:
+        linear-gradient(
+            var(--dark60),
+            var(--dark60)
+        ),
+        url(./assets/BackGround.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;  
+}
+
+main {
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(60px, 1fr) repeat(6, minmax(50px, 190px)) minmax(60px, 1fr);
+}
+
+
+.Lato {
+    color: var(--light);
+    font-family: "Lato", sans-serif;
+    font-weight: 600;
+    font-size: 3.375rem;
+}

@@ -6,10 +6,39 @@
     <title></title>
     <meta name="description" content="RecapThisVid: Summarize your videos">
     <meta name="viewport" content="width=device=width, initial-scale=1">
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="landingpage.css">
   </head>
   <body>
     <main>
+      <header>
+	<div class="project_name">
+	  <h1 class="title_font">RecapThisVid</h1>
+	</div>
+      </header>
+      <section class="info">
+	<h3 class="hero_font"><b>RecapThisVid</b> summarizes your video so you can learn <b>quicker</b> and <b>easier</b>.</h3>
+	<h3 class="hero_font">How It Works:</h3>
+	<h3 class="hero_font">Paste the video URL into the box below. Then, type your email to receive the summary of the video via email. Or, leave the email box empty to view the summary on this page.</h3>
+      </section>
+      <section class="input">
+	<h3 class="hero_font">Paste URL here:</h3>
+	<h3 class="hero_font">Type email here:</h3>
+      </section>
+      <section class="sample_form">
+	<form action="https://us-central1-videoml-lahacks.cloudfunctions.net/hello_http?name=Stanford"" method="POST">
+	  <label for="url">Paste URL here:</label>
+	  <input type="text" id="url" name="url"><br><br>
+	  <label for="email">Type email here:</label>
+	  <input type="text" id="email" name="email"><br><br>
+	  <input type="submit" value ="Submit">
+	</form>
+      <section class="start_summarizing">
+	<nav>
+	  <div class="links">
+	    <button class="button_med" href="./loadingpage.html">Summarize</button> <!--Put link to loading page here-->
+	  </div>
+	</nav>
+      </section>
     </main>
   </body>
 </html>
