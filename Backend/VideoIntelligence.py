@@ -5,6 +5,7 @@ from nltk.cluster.util import cosine_distance
 import numpy as np
 import networkx as nx
 from datetime import datetime
+
 from google.cloud import videointelligence
 from pytube import YouTube
 from google.cloud import storage
@@ -12,23 +13,24 @@ from google.cloud import storage
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
-# paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
+paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
 
 # user journey -> submit url -> download video from url -> transcribe video -> use text rank to build summary
 
 def download_and_save_video(url):
+    videoFile = YouTube(url).streams.get_highest_resolution().download(filename='Analyze')
+    
     storageCli = storage.Client()
     # get bucket
-    bucket = storageCli.get_bucket('videos12491') #without gs://
+    bucket = storageCli.get_bucket('transcribevideos')
     blob = bucket.blob('Analyze.mp4')
+    
     # TODO: Fix this error of AttributeError: 'str' object has no attribute 'tell', needs to save in /tmp file in google cloud function
-    videoFile = YouTube(url).streams.get_highest_resolution().download(filename='Analyze.mp4', output_path="/tmp")
-    blob.upload_from_file(videoFile)
-  
+    blob.upload_from_filename('Analyze.mp4')
+    print("Uploaded to cloud bucket.")
 
 def transcribe_video(url):
     download_and_save_video(url)
-
     startTime = datetime.now()
     """Transcribe speech from a video stored on GCS."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
@@ -40,9 +42,8 @@ def transcribe_video(url):
     video_context = videointelligence.types.VideoContext(
         speech_transcription_config=config
     )
-
     operation = video_client.annotate_video(
-        "gs://videos12491/Analyze.mp4", features=features, video_context=video_context
+        "gs://transcribevideos/Analyze.mp4", features=features, video_context=video_context
     )
 
     print("\nProcessing video for speech transcription.")
@@ -79,15 +80,15 @@ def transcribe_video(url):
             #             word,
             #         )
             #     )
-    print(wallOfText)
+    global paragraph
+    #print(wallOfText)
     paragraph = wallOfText
     return generate_summary()
-
+ 
     # print(f"""Execution Time: {datetime.now() - startTime}""")
 
 
 #paragraph = f.read()
-print(paragraph)
 
 def transcribe_get_all(url):
     startTime = datetime.now()
@@ -142,6 +143,7 @@ def transcribe_get_all(url):
 
 def split_text_into_sentences():
     sentences = paragraph.split(". ")
+    print(sentences)
     return text_preprocessing(sentences)
 
 def text_preprocessing(sentences):
@@ -195,9 +197,10 @@ def build_similarity_matrix(sentences):
 def generate_summary():
     # generate the sentences from the existing paragraph
     sentences = split_text_into_sentences()
-
+    
     # generate a similarity matrix
     similarity_matrix = build_similarity_matrix(sentences)
+    #print(similarity_matrix)
 
     # rank the sentences in the similarity matrix
     sentence_similarity_graph = nx.from_numpy_array(similarity_matrix)
@@ -205,7 +208,7 @@ def generate_summary():
 
     # organize the scores from top to bottom
     ranked_sentence = sorted(((scores[i],s) for i,s in enumerate(sentences)), reverse=True)    
-   # print("Indexes of top ranked_sentence order are ", ranked_sentence)     
+    #print("Indexes of top ranked_sentence order are ", ranked_sentence)     
 
     summarize_text = []
 
@@ -214,13 +217,12 @@ def generate_summary():
 
     # Step 5 - Offcourse, output the summarize text
     summary = ". ".join(summarize_text)+"."
-    print("Summarize Text: \n", summary)
+    #print("Summarize Text: \n", summary)
     return summary
 
 if __name__ == "__main__":
-    url = ""
+    url = "https://www.youtube.com/watch?v=sHP0UIdZyI4"
     # transcribe_get_all(url)
-    download_and_save_video('https://youtu.be/9bZkp7q19f0')
-    #transcribe_video(url)
-    # generate_summary()
+    #download_and_save_video('https://youtu.be/9bZkp7q19f0')
+    print(transcribe_video(url))
     # print("Paragraph summarized: " + paragraph)
