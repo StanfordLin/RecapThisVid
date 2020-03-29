@@ -4,3 +4,5 @@ SendGrid
 nltk
 numpy
 networkx
+google-cloud-storage
+google-cloud-videointelligence
