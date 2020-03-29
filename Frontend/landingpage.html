@@ -22,14 +22,16 @@
 	<h3 class="hero_font">Paste the video URL into the box below. Then, type your email to receive the summary of the video via email. Or, leave the email box empty to view the summary on this page.</h3>
 	</div>
       </section>
+         <iframe name="dummyframe" id="dummyframe" style="display: none"></iframe>
       <section class="sample_form">
-	<form target="_blank" action="http://localhost:8080/check_url" method="POST">
+	<form target="dummyframe" action="http://localhost:8080/check_url" method="POST">
 	  <label class="url input_font" for="url">Paste URL here:</label>
 	  <input type="text" id="url" name="url"><br><br>
 	  <label class="email input_font" for="email">Type email here:</label>
 	  <input type="text" id="email" name="email"><br><br>
-    <button onClick="summarytoemail.html">Summarize</button>
-  </form>
+        <button onClick="setTimeout(() => {  window.location.href = 'summarytoemail.html'; }, 2000)">Summarize</button>
+	</form>
+        </section>
     </main>
   </body>
 </html>

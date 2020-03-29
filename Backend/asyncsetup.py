@@ -5,12 +5,17 @@ import VideoIntelligence
 import SendResults
 
 async def send_out_results(url, email):
-    # send out the results to the user
-    await asyncio.sleep(10)
-    #VideoIntelligence.transcribe_video(url)
-    Summary = VideoIntelligence.transcribe_video(url)
-    
-    print(SendResults.formulate_message(email, Summary, url))
+    try:
+        # send out the results to the user
+        await asyncio.sleep(10)
+        #VideoIntelligence.transcribe_video(url)
+        Summary = VideoIntelligence.transcribe_video(url)
+        
+        print(SendResults.formulate_message(email, Summary, url))
+    except Exception as e:
+        Summary = "There was an error. Please try again."
+        
+        print(SendResults.formulate_message(email, Summary, url))
 
 async def store_url_and_process_algorithm(request):
     try:
