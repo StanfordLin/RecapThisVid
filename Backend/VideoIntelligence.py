@@ -221,7 +221,7 @@ def generate_summary():
     return summary
 
 if __name__ == "__main__":
-    url = "https://www.youtube.com/watch?v=sHP0UIdZyI4"
+    url = "https://www.youtube.com/watch?v=XlL0_m675_4"
     # transcribe_get_all(url)
     #download_and_save_video('https://youtu.be/9bZkp7q19f0')
     print(transcribe_video(url))
