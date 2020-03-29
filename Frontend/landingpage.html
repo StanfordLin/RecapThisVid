@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html-class="no-js">
+<html-class="JS Bin">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,12 +23,13 @@
 	</div>
       </section>
       <section class="sample_form">
-	<form target="_self" action="http://localhost:8080/check_url" method="POST">
+	<form target="_blank" action="https://enxoe9p4blfo.x.pipedream.net" method="POST">
 	  <label class="url input_font" for="url">Paste URL here:</label>
 	  <input type="text" id="url" name="url"><br><br>
 	  <label class="email input_font" for="email">Type email here:</label>
 	  <input type="text" id="email" name="email"><br><br>
-	  <button class="button_med" "loadingpage.html">Summarize</button>
+<!--	  <input onclick="window.location.href = 'loadingpage.html';" type="submit" value="Summarize"> -->
+	  <button class="button_med" onClick="setTimeout(() => {window.location.href='summarytoemail.html';},300)">Summarize</button>
 	</form>
     </main>
   </body>
