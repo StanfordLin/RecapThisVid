@@ -14,7 +14,7 @@ async def send_out_results(url, email):
 
 async def store_url_and_process_algorithm(request):
     try:
-        body = await request.json()
+        body = await request.post()
 
         url = body['url'] # find the url in the request body
 
