@@ -1,32 +1,52 @@
-@import url('https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&display=swap');
-
-:root {
-    --dark60: rgba(48, 70, 89, .6);
-    --light: #f5f9fc;
+@import url('https://fonts.googleapis.com/css?family=Lato:300,300i&display=swap');
+:root
+{
+	--light_text: #FFFBFB;
+	--dark_text: #3E3E3E;
+	--line: #FFFAFA;
+	--input_background: rgba(229,229,229,0.6);
+	--button_background_hover: rgba(229,229,229,0.45);
+	--input_box: #FFFBFB;
+	--button_text_hover: rgba(0,0,0,0.85);
+	--transition: all 0.3s ease 0s;
+	--overlay: rgba(51,51,51,0.7);
 }
 
-body {
-    background:
-        linear-gradient(
-            var(--dark60),
-            var(--dark60)
-        ),
-        url(./assets/BackGround.jpg);
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;  
+html, body
+{
+	height: 100%;
+	overflow: auto;
 }
 
-main {
-    height: 100%;
-    display: grid;
-    grid-template-columns: minmax(60px, 1fr) repeat(6, minmax(50px, 190px)) minmax(60px, 1fr);
+body
+{
+	background:
+		linear-gradient(
+			var(--overlay),
+			var(--overlay)
+		),
+		url(./assets/Background.jpg);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
 }
 
-
-.Lato {
-    color: var(--light);
-    font-family: "Lato", sans-serif;
-    font-weight: 600;
-    font-size: 3.375rem;
+main
+{
+	height: 100%;
+	display: grid;
+	grid-template-rows: minmax(60px, 1fr) repeat(6, minmax(50px, 190px)) minmax(60px, 1fr);
 }
+
+.summary_complete
+{
+	font-family: "Lato", sans-serif;
+	font-size: 3.5rem;
+	font-weight: 200;
+	font-style: italic;
+	color: var(--light_text);
+	align-self: center;
+	text-align: center;
+	margin-top: 650px;
+}
+

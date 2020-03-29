@@ -17,10 +17,12 @@
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
+	text-decoration: none;
 }
 
 html, body
 {
+	
 	height: 100%;
 	overflow: auto;
 }
@@ -61,11 +63,14 @@ header
 
 .button_med
 {
+
 	border: none;
 	background-color: var(--input_background);
 	padding: 8px 25px;
 	transition: var(--transition);
+	
 }
+
 
 .button_med:hover
 {
@@ -88,6 +93,7 @@ header
 
 .sample_form
 {
+	list-style: none;
 	align-self: center;
 	align-items: center;
 	text-align: center;
