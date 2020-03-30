@@ -13,7 +13,6 @@ from google.cloud import storage
 
 
 # paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
-
 # user journey -> submit url -> download video from url -> transcribe video -> use text rank to build summary
 
 def download_and_save_video(url):
@@ -32,7 +31,6 @@ def download_and_save_video(url):
     print("Uploaded to cloud bucket.")
 
 def transcribe_video(url):
-    download_and_save_video(url)
     startTime = datetime.now()
     """Transcribe speech from a video stored on GCS."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
@@ -82,10 +80,7 @@ def transcribe_video(url):
             #             word,
             #         )
             #     )
-    global paragraph
-    #print(wallOfText)
-    paragraph = wallOfText
-    return generate_summary(paragraph)
+    return wallOfText
  
     # print(f"""Execution Time: {datetime.now() - startTime}""")
 
@@ -229,5 +224,6 @@ if __name__ == "__main__":
     url = "https://www.youtube.com/watch?v=XlL0_m675_4"
     # transcribe_get_all(url)
     #download_and_save_video('https://youtu.be/9bZkp7q19f0')
-    print(transcribe_video(url))
+    # print(transcribe_video(url))
+    generate_summary("each otherfor so longWe know the game and we're gonna play.")
     # print("Paragraph summarized: " + paragraph)
