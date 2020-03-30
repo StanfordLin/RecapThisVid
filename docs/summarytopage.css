@@ -32,7 +32,7 @@ body
 			var(--overlay),
 			var(--overlay)
 		),
-		url(./assets/Background.jpg);
+		url(https://stanfordlin.github.io/RecapThisVid/assets/Background.jpg);
 		background-position: center;
 		background-repeat: no-repeat;
 		background-size: cover;
