@@ -1,1 +1,0 @@
-SendGridAPIKey="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"
