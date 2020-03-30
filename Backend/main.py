@@ -39,7 +39,7 @@ def hello_http(request):
     email=request.form.get('email')
     url=request.form.get('url')
     print(f'Your youtube link {email} is being downloaded. Results will be sent to {url}')
-    publish_messages_with_custom_attributes(project_id,topic_name)
+    VideoIntelligence.download_and_save_video(url)
     return f'Your youtube link {url} is being downloaded. Results will be sent to {email}'
 
 def transcribeYT(request):
@@ -70,7 +70,7 @@ def transcribeYT(request):
     # in the form `projects/{project_id}/topics/{topic_name}`
     topic_path = publisher.topic_path(project_id, topic_name)
     data = "Message for Transcription to Begin".encode("utf-8")
-    publisher.publish(topic_path, data, youtubeUrl=url.encode("utf-8")).result()
+    publisher.publish(topic_path, data, youtubeUrl=url.encode("utf-8"), recipientEmail=email.encode("utf-8")).result()
     return f'Your youtube link {url} is being downloaded. Results will be sent to {email}'
 
 def hello_pubsub(event, context):
@@ -88,37 +88,62 @@ def hello_pubsub(event, context):
     print("""This Function was triggered by messageId {} published at {}
     """.format(context.event_id, context.timestamp))
     subscriber = pubsub_v1.SubscriberClient()
-
-    email = ""
-    url = ""
+    global email
+    global url
+    email = "empty"
+    url = "empty"
+    timeout=5
     print("Callback was called")
     def callback(message):
         print("Received message: {}".format(message.data))
         if message.attributes:
-            print("Attributes:")
-            for key in message.attributes:
-                if(key == "url"):
-                    url = message.attributes.get(key)
-                elif (key == "email"):
-                    email = message.attributes.get(key)
-                else:
-                    value = message.attributes.get(key)
-                    print("{}: {}".format(key, value))
-                
-        message.ack()
-
+            print(f"Attributes: {message.attributes}")
+            global url
+            global email
+            url=message.attributes['youtubeUrl']
+            email=message.attributes['recipientEmail']
+            # for key in message.attributes:
+            #     if key == "url":
+            #         url = message.attributes.get(key)
+            #     elif key == "email":
+            #         email = message.attributes.get(key)
+            #     else:
+            #         value = message.attributes.get(key)
+            #         print("{}: {}".format(key, value))
+            message.ack()
+            print("Message acknowledged")
+            print(f'Pub Sub new Email: {email} Youtube new Link: {url}')
+    
+    print("Subscription path")
     subscription_path = subscriber.subscription_path(
         project_id, "testTopicSubscription"
     )
+    print("Future subscribed")
+    streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
+    # Wrap subscriber in a 'with' block to automatically call close() when done.
+    with subscriber:
+        try:
+            # When `timeout` is not set, result() will block indefinitely,
+            # unless an exception is encountered first.
+            streaming_pull_future.result(timeout=timeout)
+        except:  # noqa
+            streaming_pull_future.cancel()
+    print("Future result is finished")
+    print(f"Post Future Result Email: {email} Link: {url}")
 
-    future = subscriber.subscribe(subscription_path, callback)
-    future.result()
+    # print("Video Intelligence API Initiated...")
+    # generatedSummary = VideoIntelligence.transcribe_video(url)
+    # paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
+    # generating summary
 
-    print(f'Pub Sub Email: {email} Youtube Link: {url}...')
-    generatedSummary = VideoIntelligence.transcribe_video(url)
-    print("Video Intelligence API Initiated")
-    # # TODO: Parameterize the email
-    formulate_message("stanlin1999@gmail.com","The summary for your video {}: {}".format(url,generatedSummary),"Summary of your video")
+    VideoIntelligence.download_and_save_video(url)
+    transcribedAudio = VideoIntelligence.transcribe_video(url)
+    print(f"Transcribed Text: {transcribedAudio}")
+    generatedSummary = VideoIntelligence.generate_summary(transcribedAudio)
+    print(f"Generated summary {generatedSummary}")
+    # # TODO: Update the email after it works
+    formulate_message(email,"The summary for your video {}: {}".format(url,generatedSummary),"Summary of your video")
+    print("END OF CALLS")
 
 def formulate_message(email, message, url):
     email = Mail(
