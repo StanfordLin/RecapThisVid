@@ -198,7 +198,7 @@ def build_similarity_matrix(sentences):
     return similarity_matrix
 
 def generate_summary(paragraph):
-    # nltk.download('stopwords')
+    nltk.download('stopwords')
     print("Finished Download, going to generate summary")
     # generate the sentences from the existing paragraph
     sentences = split_text_into_sentences(paragraph)

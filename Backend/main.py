@@ -121,7 +121,7 @@ def hello_pubsub(event, context):
     # generatedSummary = VideoIntelligence.transcribe_video(url)
     paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
     # generating summary
-    VideoIntelligence.generate_summary(paragraph)
+    generatedSummary = VideoIntelligence.generate_summary(paragraph)
     # # TODO: Update the email after it works
     formulate_message("stanlin1999@gmail.com","The summary for your video {}: {}".format(url,generatedSummary),"Summary of your video")
     print(f"Genereated summary {generatedSummary}")
