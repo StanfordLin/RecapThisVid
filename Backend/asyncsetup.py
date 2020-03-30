@@ -4,6 +4,9 @@ import asyncio
 import VideoIntelligence
 import SendResults
 
+async def home(request):
+    return web.Response(text="Hello World")
+
 async def send_out_results(url, email):
     try:
         # send out the results to the user
@@ -43,7 +46,8 @@ async def store_url_and_process_algorithm(request):
 # the basic interface of the API
 app = web.Application()
 app.add_routes([
-    web.post('/check_url', store_url_and_process_algorithm)
+    web.post('/check_url', store_url_and_process_algorithm),
+    web.get('/', home)
 ])
 
 if __name__ == '__main__':  
