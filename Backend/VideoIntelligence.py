@@ -12,20 +12,23 @@ from google.cloud import storage
 
 
 
-paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
+# paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
 
 # user journey -> submit url -> download video from url -> transcribe video -> use text rank to build summary
 
 def download_and_save_video(url):
-    videoFile = YouTube(url).streams.get_highest_resolution().download(filename='Analyze')
+    print("Downloading youtube video...")
+    # videoFile = YouTube(url).streams.get_highest_resolution().download(filename='Analyze', output_path='~/tmp')
     
     storageCli = storage.Client()
     # get bucket
-    bucket = storageCli.get_bucket('transcribevideos')
+    bucket = storageCli.get_bucket('videos12491')
     blob = bucket.blob('Analyze.mp4')
     
     # TODO: Fix this error of AttributeError: 'str' object has no attribute 'tell', needs to save in /tmp file in google cloud function
-    blob.upload_from_filename('Analyze.mp4')
+    # blob.upload_from_filename('Analyze.mp4')
+
+    blob.upload_from_filename(YouTube(url).streams.get_highest_resolution().download(filename='Analyze', output_path='/tmp'))
     print("Uploaded to cloud bucket.")
 
 def transcribe_video(url):
@@ -42,10 +45,10 @@ def transcribe_video(url):
         speech_transcription_config=config
     )
     operation = video_client.annotate_video(
-        "gs://transcribevideos/Analyze.mp4", features=features, video_context=video_context
+        "gs://videos12491/Analyze.mp4", features=features, video_context=video_context
     )
 
-    print("\nProcessing video for speech transcription.")
+    print("\nProcessing video for speech transcription...")
 
     result = operation.result(timeout=3000)
 
@@ -82,7 +85,7 @@ def transcribe_video(url):
     global paragraph
     #print(wallOfText)
     paragraph = wallOfText
-    return generate_summary()
+    return generate_summary(paragraph)
  
     # print(f"""Execution Time: {datetime.now() - startTime}""")
 
@@ -140,7 +143,7 @@ def transcribe_get_all(url):
                 )
     # print(f"""Execution Time: {datetime.now() - startTime}""")
 
-def split_text_into_sentences():
+def split_text_into_sentences(paragraph):
     sentences = paragraph.split(". ")
     #print(sentences)
     return text_preprocessing(sentences)
@@ -194,10 +197,11 @@ def build_similarity_matrix(sentences):
     
     return similarity_matrix
 
-def generate_summary():
-    nltk.download('stopwords')
+def generate_summary(paragraph):
+    # nltk.download('stopwords')
+    print("Finished Download, going to generate summary")
     # generate the sentences from the existing paragraph
-    sentences = split_text_into_sentences()
+    sentences = split_text_into_sentences(paragraph)
     
     # generate a similarity matrix
     similarity_matrix = build_similarity_matrix(sentences)

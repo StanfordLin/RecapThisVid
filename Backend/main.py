@@ -39,7 +39,7 @@ def hello_http(request):
     email=request.form.get('email')
     url=request.form.get('url')
     print(f'Your youtube link {email} is being downloaded. Results will be sent to {url}')
-    publish_messages_with_custom_attributes(project_id,topic_name)
+    VideoIntelligence.download_and_save_video(url)
     return f'Your youtube link {url} is being downloaded. Results will be sent to {email}'
 
 def transcribeYT(request):
@@ -90,35 +90,42 @@ def hello_pubsub(event, context):
     subscriber = pubsub_v1.SubscriberClient()
 
     email = ""
-    url = ""
+    url = "https://www.youtube.com/watch?v=oHg5SJYRHA0"
     print("Callback was called")
     def callback(message):
         print("Received message: {}".format(message.data))
         if message.attributes:
             print("Attributes:")
             for key in message.attributes:
-                if(key == "url"):
+                if key == "url":
                     url = message.attributes.get(key)
-                elif (key == "email"):
+                elif key == "email":
                     email = message.attributes.get(key)
                 else:
                     value = message.attributes.get(key)
                     print("{}: {}".format(key, value))
-                
-        message.ack()
+            message.ack()
+            print("Message acknowledged")
+    
+    # print("Subscription path")
+    # subscription_path = subscriber.subscription_path(
+    #     project_id, "testTopicSubscription"
+    # )
+    # print("Future subscribed")
+    # future = subscriber.subscribe(subscription_path, callback)
+    # future.result()
+    # print("Future result")
 
-    subscription_path = subscriber.subscription_path(
-        project_id, "testTopicSubscription"
-    )
-
-    future = subscriber.subscribe(subscription_path, callback)
-    future.result()
-
-    print(f'Pub Sub Email: {email} Youtube Link: {url}...')
-    generatedSummary = VideoIntelligence.transcribe_video(url)
-    print("Video Intelligence API Initiated")
-    # # TODO: Parameterize the email
+    # print(f'Pub Sub Email: {email} Youtube Link: {url}...')
+    # print("Video Intelligence API Initiated...")
+    # generatedSummary = VideoIntelligence.transcribe_video(url)
+    paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
+    # generating summary
+    VideoIntelligence.generate_summary(paragraph)
+    # # TODO: Update the email after it works
     formulate_message("stanlin1999@gmail.com","The summary for your video {}: {}".format(url,generatedSummary),"Summary of your video")
+    print(f"Genereated summary {generatedSummary}")
+    print("END OF CALLS")
 
 def formulate_message(email, message, url):
     email = Mail(
