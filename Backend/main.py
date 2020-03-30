@@ -11,6 +11,37 @@ error_count = 0
 project_id = "videoml-lahacks"
 topic_name = "testTopic"
 
+def hello_http(request):
+    """HTTP Cloud Function.
+    Args:
+        request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+    Returns:
+        The response text, or any set of values that can be turned into a
+        Response object using `make_response`
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+    """
+    # request_json = request.get_json(silent=True)
+    # request_args = request.args
+    # print("THE REQUEST{}").format(request)
+    # print("the request_json{}".format(escape(request_json)))
+
+    # if request_json and 'url' and 'email' in request_json:
+    #     url = request_json['url']
+    #     email = request_json['email']
+    # elif request_args and 'url' in request_args:
+    #     url = request_args['url']
+    #     email = request_json['email']
+    # else:
+    #     url = 'World'
+    # print("The URL {}".format(escape(url)))
+    # print("The email {}".format(escape(email)))
+    email=request.form.get('email')
+    url=request.form.get('url')
+    print(f'Your youtube link {email} is being downloaded. Results will be sent to {url}')
+    publish_messages_with_custom_attributes(project_id,topic_name)
+    return f'Your youtube link {url} is being downloaded. Results will be sent to {email}'
+
 def transcribeYT(request):
     """HTTP Cloud Function.
     Args:
@@ -21,25 +52,26 @@ def transcribeYT(request):
         Response object using `make_response`
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
-    request_json = request.get_json(silent=True)
-    request_args = request.args
+    # request_json = request.get_json(silent=True)
+    # request_args = request.args
 
-    if request_json and 'url' in request_json:
-        url = request_json['url']
-    elif request_args and 'url' in request_args:
-        url = request_args['url']
-    else:
-        url = 'World'
-    
+    # if request_json and 'url' in request_json:
+    #     url = request_json['url']
+    # elif request_args and 'url' in request_args:
+    #     url = request_args['url']
+    # else:
+    #     url = 'World'
+    email=request.form.get('email')
+    url=request.form.get('url')
+    print(f'Email: {email} Youtube Link: {url}...')
       # Pub Sub
     publisher = pubsub_v1.PublisherClient()
     # The `topic_path` method creates a fully qualified identifier
     # in the form `projects/{project_id}/topics/{topic_name}`
     topic_path = publisher.topic_path(project_id, topic_name)
-    encodedData = url.encode("utf-8")
-    future = publisher.publish(topic_path, data=encodedData)
-    print(future.result)
-    return 'Hello {}!'.format(escape(url))
+    data = "Message for Transcription to Begin".encode("utf-8")
+    publisher.publish(topic_path, data, youtubeUrl=url.encode("utf-8")).result()
+    return f'Your youtube link {url} is being downloaded. Results will be sent to {email}'
 
 def hello_pubsub(event, context):
     """Background Cloud Function to be triggered by Pub/Sub.
@@ -55,15 +87,37 @@ def hello_pubsub(event, context):
 
     print("""This Function was triggered by messageId {} published at {}
     """.format(context.event_id, context.timestamp))
+    subscriber = pubsub_v1.SubscriberClient()
 
-    if 'data' in event:
-        url = base64.b64decode(event['data']).decode('utf-8')
-    else:
-        url = 'World'
-    print('Hello {}!'.format(url))
+    email = ""
+    url = ""
+    print("Callback was called")
+    def callback(message):
+        print("Received message: {}".format(message.data))
+        if message.attributes:
+            print("Attributes:")
+            for key in message.attributes:
+                if(key == "url"):
+                    url = message.attributes.get(key)
+                elif (key == "email"):
+                    email = message.attributes.get(key)
+                else:
+                    value = message.attributes.get(key)
+                    print("{}: {}".format(key, value))
+                
+        message.ack()
+
+    subscription_path = subscriber.subscription_path(
+        project_id, "testTopicSubscription"
+    )
+
+    future = subscriber.subscribe(subscription_path, callback)
+    future.result()
+
+    print(f'Pub Sub Email: {email} Youtube Link: {url}...')
     generatedSummary = VideoIntelligence.transcribe_video(url)
     print("Video Intelligence API Initiated")
-    # TODO: Parameterize the email
+    # # TODO: Parameterize the email
     formulate_message("stanlin1999@gmail.com","The summary for your video {}: {}".format(url,generatedSummary),"Summary of your video")
 
 def formulate_message(email, message, url):

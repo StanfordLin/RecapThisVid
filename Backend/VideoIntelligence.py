@@ -10,8 +10,7 @@ from google.cloud import videointelligence
 from pytube import YouTube
 from google.cloud import storage
 
-nltk.download('stopwords')
-stop_words = set(stopwords.words('english'))
+
 
 paragraph = "Calgary remains the centre of the province’s coronavirus outbreak, with 378 (61 per cent) of Alberta’s case coming in the AHS Calgary zone, including 325 cases within Calgary’s city limits. The Edmonton zone has 22 per cent of cases, the second-most in the province. More than 42,500 Albertans have now been tested for COVID-19, meaning nearly one in every 100 Albertans have received a test. About 1.5 per cent of those tests have come back positive. Rates of testing in Alberta jolted back up on Friday, with more than 3,600 conducted — the most yet in a single day. The surge followed one of Alberta’s lowest testing days Thursday, as the province shifted its testing focus away from returning travellers and towards health-care workers and vulnerable populations, including those in hospital or living in continuing care facilities."
 
@@ -155,6 +154,7 @@ def text_preprocessing(sentences):
     return clean_sentences
 
 def compare_sentences(sentence1, sentence2):
+    stop_words = set(stopwords.words('english'))
     # make a list of all the unique words between the two sentences
     # make a vector holds how each word has a specific entity in the list
     # from the vector, use cosine_distance to find how different these vectors are
@@ -195,6 +195,7 @@ def build_similarity_matrix(sentences):
     return similarity_matrix
 
 def generate_summary():
+    nltk.download('stopwords')
     # generate the sentences from the existing paragraph
     sentences = split_text_into_sentences()
     
